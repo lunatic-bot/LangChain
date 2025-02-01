@@ -37,7 +37,7 @@ To explore the examples in this repository, follow these steps:
 1. **Clone the repository**:
 
    ```bash
-   git clone https://github.com/your-username/your-repo-name.git
+   git clone https://github.com/lunatic-bot/LangChain.git
 
    ```
 
