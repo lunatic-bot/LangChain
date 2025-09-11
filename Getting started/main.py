@@ -1,21 +1,22 @@
-## Integrate our code OpenAI API
 import os
-from constants import openai_key
-from langchain.llms import OpenAI
-
+from dotenv import load_dotenv
 import streamlit as st
+from langchain_google_genai import ChatGoogleGenerativeAI
 
-os.environ["OPENAI_API_KEY"]=openai_key
+# Load .env
+load_dotenv()
 
-# streamlit framework
+# Initialize LangChain LLM
+llm = ChatGoogleGenerativeAI(
+    model="gemini-1.5-flash",
+    temperature=0.8,
+    google_api_key=os.getenv("GEMINI_API_KEY")
+)
 
-st.title('Langchain Demo With OPENAI API')
-input_text=st.text_input("Search the topic u want")
-
-## OPENAI LLMS
-llm=OpenAI(temperature=0.8)
-
-
+# Streamlit app
+st.title("LangChain Demo With Gemini API")
+input_text = st.text_input("Search the topic you want")
 
 if input_text:
-    st.write(llm(input_text))
+    response = llm.invoke(input_text)   # LangChain API
+    st.write(response.content)
