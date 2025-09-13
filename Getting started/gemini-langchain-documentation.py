@@ -134,33 +134,139 @@ llm = ChatGoogleGenerativeAI(
 # print(f"Response for video: {response.content}")
 
 
-import base64
+# import base64
 
-from IPython.display import Image, display
-from langchain_core.messages import AIMessage
+# from IPython.display import Image, display
+# from langchain_core.messages import AIMessage
+# from langchain_google_genai import ChatGoogleGenerativeAI
+
+# llm = ChatGoogleGenerativeAI(model="models/gemini-2.0-flash-preview-image-generation", google_api_key=os.getenv("GEMINI_API_KEY"))
+
+# message = {
+#     "role": "user",
+#     "content": "Generate a photorealistic image of a cuddly cat wearing a hat.",
+# }
+
+# response = llm.invoke(
+#     [message],
+#     generation_config=dict(response_modalities=["TEXT", "IMAGE"]),
+# )
+
+
+
+# def _get_image_base64(response: AIMessage) -> str | None:
+#     # look for the first block with an image
+#     image_block = next(
+#         (block for block in response.content if isinstance(block, dict) and block.get("image_url")),
+#         None
+#     )
+#     if not image_block:
+#         print("⚠️ No image found in response")
+#         return None
+
+#     url = image_block["image_url"].get("url")
+#     if not url or "," not in url:
+#         print("⚠️ Image URL not in expected format")
+#         return None
+
+#     return url.split(",")[-1]
+
+
+
+# image_base64 = _get_image_base64(response)
+# if image_base64:
+#     display(Image(data=base64.b64decode(image_base64), width=300))
+# else:
+#     print("No image to display.")
+
+
+
+
+
+# # Tool Calling
+# from langchain_core.tools import tool
+# from langchain_google_genai import ChatGoogleGenerativeAI
+
+
+# # Define the tool
+# @tool(description="Get the current weather in a given location")
+# def get_weather(location: str) -> str:
+#     return "It's sunny."
+
+
+# # Initialize the model and bind the tool
+# llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash", google_api_key=os.getenv("GEMINI_API_KEY"))
+# llm_with_tools = llm.bind_tools([get_weather])
+
+# # Invoke the model with a query that should trigger the tool
+# query = "What's the weather in San Francisco?"
+# ai_msg = llm_with_tools.invoke(query)
+
+# # Check the tool calls in the response
+# print(ai_msg.tool_calls)
+
+# # Example tool call message would be needed here if you were actually running the tool
+# from langchain_core.messages import ToolMessage
+
+# tool_message = ToolMessage(
+#     content=get_weather(*ai_msg.tool_calls[0]["args"]),
+#     tool_call_id=ai_msg.tool_calls[0]["id"],
+# )
+# llm_with_tools.invoke([ai_msg, tool_message])  # Example of passing tool result back
+
+
+
+# ## Structured output :
+# from langchain_core.pydantic_v1 import BaseModel, Field
+# from langchain_google_genai import ChatGoogleGenerativeAI
+
+# ## define the model -
+# class Person(BaseModel):
+#     name: str = Field(..., description="The person's Name")
+#     height_n: float = Field(..., description="The person's height in meters")
+
+
+# # Initializet the model
+# llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash", google_api_key=os.getenv("GEMINI_API_KEY"))
+# structured_llm = llm.with_structured_output(Person)
+
+# #Invoke the model with a query asking for structured information
+# result = structured_llm.invoke("Who was the 16th president of USA, and how tall was he in meters?")
+
+# print(result)
+
+
+# Native Async
+# Use asynchronous methods for non-blocking calls.
+
 from langchain_google_genai import ChatGoogleGenerativeAI
 
-llm = ChatGoogleGenerativeAI(model="models/gemini-2.0-flash-preview-image-generation", google_api_key=os.getenv("GEMINI_API_KEY"))
-
-message = {
-    "role": "user",
-    "content": "Generate a photorealistic image of a cuddly cat wearing a hat.",
-}
-
-response = llm.invoke(
-    [message],
-    generation_config=dict(response_modalities=["TEXT", "IMAGE"]),
-)
+llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", google_api_key=os.getenv("GEMINI_API_KEY"))
 
 
-def _get_image_base64(response: AIMessage) -> None:
-    image_block = next(
-        block
-        for block in response.content
-        if isinstance(block, dict) and block.get("image_url")
-    )
-    return image_block["image_url"].get("url").split(",")[-1]
+async def run_async_calls():
+    # Async invoke
+    result_ainvoke = await llm.ainvoke("Why is the sky blue?")
+    print("Async Invoke Result:", result_ainvoke.content[:50] + "...")
+
+    # Async stream
+    print("\nAsync Stream Result:")
+    async for chunk in llm.astream(
+        "Write a short poem about asynchronous programming."
+    ):
+        print(chunk.content, end="", flush=True)
+    print("\n")
+
+    # Async batch
+    results_abatch = await llm.abatch(["What is 1+1?", "What is 2+2?"])
+    print("Async Batch Results:", [res.content for res in results_abatch])
 
 
-image_base64 = _get_image_base64(response)
-display(Image(data=base64.b64decode(image_base64), width=300))
+async def call_async():
+    await run_async_calls()
+
+import asyncio
+
+if __name__ == "__main__":
+    asyncio.run(call_async())
+
