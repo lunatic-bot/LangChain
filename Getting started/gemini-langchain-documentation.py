@@ -239,34 +239,47 @@ llm = ChatGoogleGenerativeAI(
 # Native Async
 # Use asynchronous methods for non-blocking calls.
 
+# from langchain_google_genai import ChatGoogleGenerativeAI
+
+# llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", google_api_key=os.getenv("GEMINI_API_KEY"))
+
+
+# async def run_async_calls():
+#     # Async invoke
+#     result_ainvoke = await llm.ainvoke("Why is the sky blue?")
+#     print("Async Invoke Result:", result_ainvoke.content[:50] + "...")
+
+#     # Async stream
+#     print("\nAsync Stream Result:")
+#     async for chunk in llm.astream(
+#         "Write a short poem about asynchronous programming."
+#     ):
+#         print(chunk.content, end="", flush=True)
+#     print("\n")
+
+#     # Async batch
+#     results_abatch = await llm.abatch(["What is 1+1?", "What is 2+2?"])
+#     print("Async Batch Results:", [res.content for res in results_abatch])
+
+
+# async def call_async():
+#     await run_async_calls()
+
+# import asyncio
+
+# if __name__ == "__main__":
+#     asyncio.run(call_async())
+
+
+
+## token usage tracking- 
 from langchain_google_genai import ChatGoogleGenerativeAI
 
-llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", google_api_key=os.getenv("GEMINI_API_KEY"))
+llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash", google_api_key=os.getenv("GEMINI_API_KEY"))
 
+result = llm.invoke("Explain the concept of prompt engineering in one sentence.")
 
-async def run_async_calls():
-    # Async invoke
-    result_ainvoke = await llm.ainvoke("Why is the sky blue?")
-    print("Async Invoke Result:", result_ainvoke.content[:50] + "...")
-
-    # Async stream
-    print("\nAsync Stream Result:")
-    async for chunk in llm.astream(
-        "Write a short poem about asynchronous programming."
-    ):
-        print(chunk.content, end="", flush=True)
-    print("\n")
-
-    # Async batch
-    results_abatch = await llm.abatch(["What is 1+1?", "What is 2+2?"])
-    print("Async Batch Results:", [res.content for res in results_abatch])
-
-
-async def call_async():
-    await run_async_calls()
-
-import asyncio
-
-if __name__ == "__main__":
-    asyncio.run(call_async())
+print(result.content)
+print("\nUsage Metadata:")
+print(result.usage_metadata)
 
