@@ -1,2 +1,7 @@
 Getting started\.env
 Getting started/.env
+.venv
+Getting started\constants.py
+Getting started/constants.py
+Langchain/.env
+
