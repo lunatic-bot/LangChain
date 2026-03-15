@@ -4,4 +4,7 @@ Getting started/.env
 Getting started\constants.py
 Getting started/constants.py
 Langchain/.env
+__pycache__/
+*.pyc
+Getting started/__pycache__
 
