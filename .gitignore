@@ -7,4 +7,5 @@ Langchain/.env
 __pycache__/
 *.pyc
 Getting started/__pycache__
+PersonalAIBot/.env
 
