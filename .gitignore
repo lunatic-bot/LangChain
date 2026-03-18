@@ -8,4 +8,5 @@ __pycache__/
 *.pyc
 Getting started/__pycache__
 PersonalAIBot/.env
+Langchain/rag/Attention.pdf
 
