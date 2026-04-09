@@ -9,6 +9,9 @@ __pycache__/
 Getting started/__pycache__
 PersonalAIBot/.env
 Langchain/rag/Attention.pdf
-
+Langchain/LangUpdatedV1/.env
 chainenv
+Langchain/LangUpdatedV1/v1venv
+v1env
+requirements1.txt
 
